@@ -1,4 +1,4 @@
-{% extends "templates/public_template.html" %}
+{% extends "public_template.html" %}
 
 {% block title %}Upload{% endblock %}
 
@@ -16,8 +16,8 @@
         <div class="form-group">
           <label>Select image</label>
           <div class="custom-file">
-            <input type="file" class="custom-file-input" name="image" id="image">
-            <label class="custom-file-label" for="image">Select image...</label>
+            <input type="file" name="image" accept="image/png, image/jpeg" id="image_input">
+            <label class="custom-file-label" for="image_input">Select image...</label>
           </div>
         </div>
 

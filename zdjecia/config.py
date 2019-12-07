@@ -1,8 +1,8 @@
 class Config(object):
-    DEBUG = False
+    DEBUG = True
     TESTING = False
     
-    IMAGE_UPLOADS = "app/static/img"
+    IMAGE_UPLOADS = "uploaded_images"
 
 
 class ProductionConfig(Config):
