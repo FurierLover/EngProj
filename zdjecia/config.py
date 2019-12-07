@@ -2,7 +2,7 @@ class Config(object):
     DEBUG = False
     TESTING = False
     
-    IMAGE_UPLOADS = "/Users/ola/zdjecia/flask/static"
+    IMAGE_UPLOADS = "app/static/img"
 
 
 class ProductionConfig(Config):
