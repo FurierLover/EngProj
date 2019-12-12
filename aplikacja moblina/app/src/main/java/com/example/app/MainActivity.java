@@ -37,7 +37,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int RESULT_LOAD_IMAGE=1;
-    private static final  String SERVER_ADDRESS ="http://127.0.0.1:5000/";
+    private static final  String SERVER_ADDRESS ="http://192.168.0.178:5000/";
 
     ImageView imageToUpload, downloadedImage;
     Button bUploadImage, bDownloadImage;
@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             HttpParams httpRequestParams = getHttpRequestParams();
 
             HttpClient client = new DefaultHttpClient(httpRequestParams);
-            HttpPost post =new HttpPost(SERVER_ADDRESS + "SavePicture.php");
+            HttpPost post =new HttpPost(SERVER_ADDRESS + "/upload_image");
 
             try {
                 post.setEntity(new UrlEncodedFormEntity(dataToSend));

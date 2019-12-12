@@ -4,12 +4,12 @@ from werkzeug.utils import secure_filename
 
 import os
 
-#app.config["IMAGE_UPLOADS"] = "/Users/ola/zdjecia/app/static"
+# app.config["IMAGE_UPLOADS"] = "/Users/ola/zdjecia/app/static"
 app.config["ALLOWED_IMAGE_EXTENSIONS"] = ["JPEG", "JPG", "PNG", "GIF"]
 app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
-def allowed_image(filename):
 
+def allowed_image(filename):
     if not "." in filename:
         return False
 
@@ -22,21 +22,22 @@ def allowed_image(filename):
 
 
 def allowed_image_filesize(filesize):
-
     if int(filesize) <= app.config["MAX_IMAGE_FILESIZE"]:
         return True
     else:
         return False
-        
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/upload-image", methods=["GET", "POST"])
+
+@app.route("/upload_image", methods=["GET", "POST"])
 def upload_image():
     if request.method == "POST":
         if request.files:
-            
+
             image = request.files["image"]
 
             if image.filename == "":
@@ -48,7 +49,7 @@ def upload_image():
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
                 print("Image saved")
                 return redirect(request.url)
-                
+
             else:
                 print("That file extension is not allowed")
                 return redirect(request.url)

@@ -1,5 +1,4 @@
-#!/Users/ola/flaskapp/venv/bin/python3
-
+#!/home/grobocop/EngProj/zdjecia/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
