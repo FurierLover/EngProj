@@ -57,7 +57,7 @@ def upload_image():
     return render_template("upload_image.html")
 
 
-@app.route('upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_from_smartphone():
     if request.files:
         return '', 200
