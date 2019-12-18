@@ -55,3 +55,11 @@ def upload_image():
                 return redirect(request.url)
 
     return render_template("upload_image.html")
+
+
+@app.route('upload', methods=['POST'])
+def upload_from_smartphone():
+    if request.files:
+        return '', 200
+    else:
+        return '', 404
