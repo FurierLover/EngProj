@@ -1,7 +1,8 @@
 package com.example.app;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import java.io.IOException;
+import java.io.File;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -29,6 +30,12 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.URL;
@@ -37,7 +44,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private static final int RESULT_LOAD_IMAGE=1;
-    private static final  String SERVER_ADDRESS ="http://192.168.0.178:5000/";
+    private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
+
 
     ImageView imageToUpload, downloadedImage;
     Button bUploadImage, bDownloadImage;
@@ -102,6 +110,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             this.name=name;
 
         }
+        public void uploadImage(File image, String imageName) throws IOException {
+
+            OkHttpClient client = new OkHttpClient();
+            RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                    .addFormDataPart("file", imageName, RequestBody.create(MEDIA_TYPE_PNG, image))
+                    .build();
+
+            Request request = new Request.Builder().url("http://localhost:8080/v1/upload")
+                    .post(requestBody).build();
+
+            Response response = client.newCall(request).execute();
+            if (!response.isSuccessful()) {
+                throw new IOException("Unexpected code " + response);
+            }
+
+        }
+
         @Override
         protected Void doInBackground(Void... params) {
             ByteArrayOutputStream byteArrayOutputStream= new ByteArrayOutputStream();
