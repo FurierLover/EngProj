@@ -1,17 +1,9 @@
 package com.example.app;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.File;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -21,12 +13,16 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -38,6 +34,28 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
 import io.grpc.Context;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -48,28 +66,14 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.logging.Handler;
-
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
-
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int RESULT_LOAD_IMAGE = 1;
     private static final MediaType MEDIA_TYPE_PNG = MediaType.parse("image/png");
 
     private String imagePath;
 
-    private static final String SERVER_ADDRESS = "https://172.20.10.8:5000/upload";
+    private static final String SERVER_ADDRESS = "http://192.168.0.179:5000/upload";
+    private boolean trustAllHosts = true;
 
     ImageView imageToUpload, downloadedImage;
     Button bUploadImage, bDownloadImage;
@@ -80,14 +84,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imageToUpload = (ImageView) findViewById(R.id.imageToUpload);
-        downloadedImage = (ImageView) findViewById(R.id.downloadedImage);
+        imageToUpload = findViewById(R.id.imageToUpload);
+        downloadedImage = findViewById(R.id.downloadedImage);
 
-        bUploadImage = (Button) findViewById(R.id.bUploadImage);
-        bDownloadImage = (Button) findViewById(R.id.bDownloadImage);
+        bUploadImage = findViewById(R.id.bUploadImage);
+        bDownloadImage = findViewById(R.id.bDownloadImage);
 
-        uploadImageName = (EditText) findViewById(R.id.etUploadName);
-        downloadImageName = (EditText) findViewById(R.id.etUploadName);
+        uploadImageName = findViewById(R.id.etUploadName);
+        downloadImageName = findViewById(R.id.etUploadName);
 
         imageToUpload.setOnClickListener(this);
         bUploadImage.setOnClickListener(new View.OnClickListener() {
@@ -100,9 +104,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 final View view = v;
                 String[] tmp = imagePath.split("/");
-                String imageName = tmp[tmp.length-1];
+                String imageName = tmp[tmp.length - 1];
 
-                OkHttpClient client = new OkHttpClient();
+                OkHttpClient client = createOkHttpClient();
                 RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
                         .addFormDataPart("file", imageName, RequestBody.create(MEDIA_TYPE_PNG, new File(imagePath)))
                         .build();
@@ -110,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Request request = new Request.Builder().url(SERVER_ADDRESS)
                         .post(requestBody).build();
 
-                client.newCall(request).enqueue(new Callback(){
+                client.newCall(request).enqueue(new Callback() {
 
 
                     @Override
@@ -123,9 +127,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         Looper.prepare();
-                        if(response.code() == 200){
+                        if (response.code() == 200) {
                             Toast.makeText(view.getContext(), "OK", Toast.LENGTH_LONG).show();
-                        }else{
+                        } else {
                             Toast.makeText(view.getContext(), "Not Found", Toast.LENGTH_LONG).show();
                         }
                         Looper.loop();
@@ -141,61 +145,102 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         checkSSL();
     }
 
-    private void createOkHttpClient(Context context): OkHttpClient {
-        var client = OkHttpClient.Builder()
+    private OkHttpClient createOkHttpClient() {
+        OkHttpClient.Builder client = new OkHttpClient.Builder();
 
-        if (dangerouslyTrustingAllHostsWhichWeWillNeverEverDoInProduction == true)
-            getTrustAllHostsSSLSocketFactory()?.let {
-            client.sslSocketFactory(it)
+        if (trustAllHosts) {
+            SSLSocketFactory socketFactory = getTrustAllHostsSSLSocketFactory();
+            client.sslSocketFactory(socketFactory);
         }
 
-        client.sslSocketFactory(getSslContextForCertificateFile(context, "my_certificate.pem").socketFactory)
+        client.sslSocketFactory(getSslContextForCertificateFile("my_certificate.pem").getSocketFactory());
 
-        return client.build()
+        return client.build();
     }
-    private void checkSSL() {
-//        // Load CAs from an InputStream
-//// (could be from a resource or ByteArrayInputStream or ...)
-//        CertificateFactory cf = CertificateFactory.getInstance("X.509");
-//// From https://www.washington.edu/itconnect/security/ca/load-der.crt
-//        InputStream caInput = new BufferedInputStream(new FileInputStream("load-der.crt"));
-//        Certificate ca;
-//        try {
-//            ca = cf.generateCertificate(caInput);
-//            System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
-//        } finally {
-//            caInput.close();
-//        }
-//
-//// Create a KeyStore containing our trusted CAs
-//        String keyStoreType = KeyStore.getDefaultType();
-//        KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-//        keyStore.load(null, null);
-//        keyStore.setCertificateEntry("ca", ca);
-//
-//// Create a TrustManager that trusts the CAs in our KeyStore
-//        String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-//        TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
-//        tmf.init(keyStore);
-//
-//// Create an SSLContext that uses our TrustManager
-//        SSLContext context = SSLContext.getInstance("TLS");
-//        context.init(null, tmf.getTrustManagers(), null);
-//
-//// Tell the URLConnection to use a SocketFactory from our SSLContext
-//        URL url = new URL("https://certs.cac.washington.edu/CAtest/");
-//        HttpsURLConnection urlConnection =
-//                (HttpsURLConnection)url.openConnection();
-//        urlConnection.setSSLSocketFactory(context.getSocketFactory());
-//        InputStream in = urlConnection.getInputStream();
-//
 
+    private SSLSocketFactory getTrustAllHostsSSLSocketFactory() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        @Override
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                        }
+
+                        @Override
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+
+                        }
+
+                        @Override
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return new X509Certificate[0];
+                        }
+                    }
+            };
+
+            // Install the all-trusting trust manager
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            sslContext.init(null, trustAllCerts, new SecureRandom());
+            // Create an ssl socket factory with our all-trusting manager
+
+            return sslContext.getSocketFactory();
+        } catch (KeyManagementException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+
+    private SSLContext getSslContextForCertificateFile(String filename) {
+        try {
+            KeyStore keyStore = getKeyStore(filename);
+            SSLContext sslContext = SSLContext.getInstance("SSL");
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            trustManagerFactory.init(keyStore);
+            sslContext.init(null, trustManagerFactory.getTrustManagers(), new SecureRandom());
+            return sslContext;
+        } catch (Exception e) {
+            String msg = "Error during creating SslContext for certificate from assets";
+            e.printStackTrace();
+            throw new RuntimeException(msg);
+        }
+    }
+
+    private KeyStore getKeyStore(String fileName) {
+        KeyStore keyStore = null;
+        try {
+            AssetManager assetManager = this.getAssets();
+            CertificateFactory cf = CertificateFactory.getInstance("X.509");
+            InputStream caInput = assetManager.open(fileName);
+            Certificate ca;
+            try {
+                ca = cf.generateCertificate(caInput);
+                Log.d("SslUtilsAndroid", "ca=" + ((X509Certificate) ca).getSubjectDN());
+            } finally {
+                caInput.close();
+            }
+
+            String keyStoreType = KeyStore.getDefaultType();
+            keyStore = KeyStore.getInstance(keyStoreType);
+            keyStore.load(null, null);
+            keyStore.setCertificateEntry("ca", ca);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return keyStore;
+    }
+
+    private void checkSSL() {
     }
 
     private void checkPermissions() {
         if (
                 ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+                        ContextCompat.checkSelfPermission(this, Manifest.permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.INTERNET},
                     PackageManager.PERMISSION_GRANTED);
@@ -246,6 +291,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         public void uploadImage(File image, String imageName) throws IOException {
+
 
             OkHttpClient client = new OkHttpClient();
             RequestBody requestBody = new MultipartBody.Builder().setType(MultipartBody.FORM)
@@ -330,6 +376,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 downloadedImage.setImageBitmap(bitmap);
             }
         }
+
     }
 
 

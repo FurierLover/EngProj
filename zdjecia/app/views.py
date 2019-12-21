@@ -48,7 +48,7 @@ def upload_image():
                 filename = secure_filename(image.filename)
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
                 print("Image saved")
-                return redirect(request.url)
+                return redirect('/uploaded')
 
             else:
                 print("That file extension is not allowed")
@@ -63,3 +63,8 @@ def upload_from_smartphone():
         return '', 200
     else:
         return '', 404
+
+
+@app.route("/uploaded")
+def image_uploaded():
+    return render_template("image_uploaded.html")
