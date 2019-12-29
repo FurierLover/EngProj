@@ -1,5 +1,5 @@
 from app import app
-from flask import render_template, request, redirect
+from flask import render_template, request, redirect, url_for
 from werkzeug.utils import secure_filename
 
 import os
@@ -48,7 +48,7 @@ def upload_image():
                 filename = secure_filename(image.filename)
                 image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
                 print("Image saved")
-                return redirect('/uploaded')
+                return image_uploaded(filename)
 
             else:
                 print("That file extension is not allowed")
@@ -66,5 +66,6 @@ def upload_from_smartphone():
 
 
 @app.route("/uploaded")
-def image_uploaded():
-    return render_template("image_uploaded.html")
+def image_uploaded(filename):
+    image_url = "../static/img/"+filename
+    return render_template("image_uploaded.html", image=image_url)

@@ -7,12 +7,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b610fd41-4957-442e-9f23-2cfa86bfded0" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/templates/image_uploaded.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../aplikacja moblina/app/src/main/assets/my_service_certifcate.pem" beforeDir="false" afterPath="$PROJECT_DIR$/../aplikacja moblina/app/src/main/assets/my_service_certifcate.pem" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../aplikacja moblina/app/src/main/java/com/example/app/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../aplikacja moblina/app/src/main/java/com/example/app/MainActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/mesh_thread.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mesh.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/run.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/run.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/templates/public_template.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/public_template.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/templates/image_uploaded.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/templates/image_uploaded.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -34,6 +33,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -61,7 +61,12 @@
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
-  <component name="RunManager" selected="Python.zdjecia">
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.mesh_thread">
     <configuration default="true" type="AndroidJUnit" factoryName="Android JUnit">
       <option name="TEST_OBJECT" value="class" />
       <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
@@ -122,6 +127,50 @@
         <option name="Android.Gradle.BeforeRunTask" enabled="true" />
       </method>
     </configuration>
+    <configuration name="mesh" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="zdjecia" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/mesh.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="mesh_thread" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="zdjecia" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/app" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app/mesh_thread.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="run" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="zdjecia" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -169,9 +218,13 @@
     <list>
       <item itemvalue="Python.zdjecia" />
       <item itemvalue="Python.run" />
+      <item itemvalue="Python.mesh" />
+      <item itemvalue="Python.mesh_thread" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.mesh_thread" />
+        <item itemvalue="Python.mesh" />
         <item itemvalue="Python.run" />
       </list>
     </recent_temporary>
@@ -208,7 +261,9 @@
       <workItem from="1576689419823" duration="188000" />
       <workItem from="1576689761666" duration="3830000" />
       <workItem from="1576782603744" duration="148000" />
-      <workItem from="1576924514068" duration="3088000" />
+      <workItem from="1576924514068" duration="5311000" />
+      <workItem from="1577060313180" duration="82000" />
+      <workItem from="1577641167160" duration="8556000" />
     </task>
     <servers />
   </component>
@@ -228,38 +283,38 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="776" y="310" width="424" height="484" key="FileChooserDialogImpl/67.27.1853.1053@67.27.1853.1053" timestamp="1576689961467" />
-    <state width="881" height="277" key="GridCell.Tab.0.bottom" timestamp="1576934345406">
+    <state width="1807" height="276" key="GridCell.Tab.0.bottom" timestamp="1577649980252">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="277" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1576934345406" />
-    <state width="881" height="277" key="GridCell.Tab.0.center" timestamp="1576934345406">
+    <state width="1807" height="276" key="GridCell.Tab.0.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1577649980252" />
+    <state width="1807" height="276" key="GridCell.Tab.0.center" timestamp="1577649980251">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="277" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1576934345406" />
-    <state width="881" height="277" key="GridCell.Tab.0.left" timestamp="1576934345405">
+    <state width="1807" height="276" key="GridCell.Tab.0.center/67.27.1853.1053@67.27.1853.1053" timestamp="1577649980251" />
+    <state width="1807" height="276" key="GridCell.Tab.0.left" timestamp="1577649980251">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="277" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1576934345405" />
-    <state width="881" height="277" key="GridCell.Tab.0.right" timestamp="1576934345406">
+    <state width="1807" height="276" key="GridCell.Tab.0.left/67.27.1853.1053@67.27.1853.1053" timestamp="1577649980251" />
+    <state width="1807" height="276" key="GridCell.Tab.0.right" timestamp="1577649980251">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="277" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1576934345406" />
-    <state width="881" height="344" key="GridCell.Tab.1.bottom" timestamp="1576933736461">
+    <state width="1807" height="276" key="GridCell.Tab.0.right/67.27.1853.1053@67.27.1853.1053" timestamp="1577649980251" />
+    <state width="881" height="343" key="GridCell.Tab.1.bottom" timestamp="1577649493792">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="344" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1576933736461" />
-    <state width="881" height="344" key="GridCell.Tab.1.center" timestamp="1576933736461">
+    <state width="881" height="343" key="GridCell.Tab.1.bottom/67.27.1853.1053@67.27.1853.1053" timestamp="1577649493792" />
+    <state width="881" height="343" key="GridCell.Tab.1.center" timestamp="1577649493792">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="344" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1576933736461" />
-    <state width="881" height="344" key="GridCell.Tab.1.left" timestamp="1576933736460">
+    <state width="881" height="343" key="GridCell.Tab.1.center/67.27.1853.1053@67.27.1853.1053" timestamp="1577649493792" />
+    <state width="881" height="343" key="GridCell.Tab.1.left" timestamp="1577649493791">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="344" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1576933736460" />
-    <state width="881" height="344" key="GridCell.Tab.1.right" timestamp="1576933736461">
+    <state width="881" height="343" key="GridCell.Tab.1.left/67.27.1853.1053@67.27.1853.1053" timestamp="1577649493791" />
+    <state width="881" height="343" key="GridCell.Tab.1.right" timestamp="1577649493792">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
-    <state width="881" height="344" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1576933736461" />
+    <state width="881" height="343" key="GridCell.Tab.1.right/67.27.1853.1053@67.27.1853.1053" timestamp="1577649493792" />
     <state x="898" y="187" key="SettingsEditor" timestamp="1576694840780">
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
@@ -268,9 +323,26 @@
       <screen x="67" y="27" width="1853" height="1053" />
     </state>
     <state x="649" y="380" key="com.intellij.ide.util.TipDialog/67.27.1853.1053@67.27.1853.1053" timestamp="1575841907030" />
+    <state x="1224" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1577647050250">
+      <screen x="67" y="27" width="1853" height="1053" />
+    </state>
+    <state x="1224" y="472" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/67.27.1853.1053@67.27.1853.1053" timestamp="1577647050250" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app/views.py</url>
+          <line>70</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/zdjecia$mesh.coverage" NAME="mesh Coverage Results" MODIFIED="1577644775725" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/zdjecia$run.coverage" NAME="run Coverage Results" MODIFIED="1576178695279" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/zdjecia$zdjecia.coverage" NAME="zdjecia Coverage Results" MODIFIED="1576934345401" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
+    <SUITE FILE_PATH="coverage/zdjecia$zdjecia.coverage" NAME="zdjecia Coverage Results" MODIFIED="1577641687161" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
+    <SUITE FILE_PATH="coverage/zdjecia$mesh_thread.coverage" NAME="mesh_thread Coverage Results" MODIFIED="1577649980241" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/app" />
   </component>
 </project>
