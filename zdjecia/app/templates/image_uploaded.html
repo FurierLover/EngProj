@@ -13,48 +13,50 @@
             height: 100%
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+
 {% endblock %}
 
 {% block main %}
-    {#    {% if image %}#}
-    {#        <img src={{ image }}>#}
-    {#    {% endif %}#}
+    <h1>Wait</h1>
+
     <script src="../static/js/three.js-master/build/three.js"></script>
-    <script>
-        var scene = new THREE.Scene();
-        var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    <script src="../static/js/three.js-master/examples/jsm/loaders/OBJLoader.js" type="module"></script>
+    <script src="../static/js/three.js-master/examples/jsm/loaders/DDSLoader.js" type="module"></script>
+    <script src="../static/js/three.js-master/examples/jsm/loaders/MTLLoader.js" type="module"></script>
+    <script type="module" charset="utf-8">
 
-        var renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
+    import {MTLLoader} from "../static/js/three.js-master/examples/jsm/loaders/MTLLoader";
+    import {OBJLoader} from "../static/js/three.js-master/examples/jsm/loaders/OBJLoader";
 
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
 
-        {% if image %}
-            var texture = new THREE.TextureLoader().load("{{ image }}");
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
-            var geometry = new THREE.BoxGeometry(1, 1, 1);
-            var material = new THREE.MeshBasicMaterial({map: texture});
-        {% else %}
-            var geometry = new THREE.BoxGeometry(1, 1, 1);
-            var material = new THREE.MeshBasicMaterial({map: texture});py
+        socket.on('my event', function (msg) {
+            console.log(msg)
+        });
+        socket.emit('my event', {data: 'I\'m connected!'});
+
+        {% if object_url %}
+            let url = "http://" + document.domain + ':' + location.port + "/{{object_url}}";
+            var scene = new THREE.Scene();
+            var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+            var renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+            new MTLLoader(manager)
+                .setPath(url)
+                .load('texturedMesh.mtl', function (materials) {
+                    materials.preload();
+                    new OBJLoader(manager)
+                        .setMaterials(materials)
+                        .setPath(url)
+                        .load('texturedMesh.obj', function (object) {
+                            scene.add(object);
+                        }, onProgress, onError);
+                });
+            //
         {% endif %}
-
-        var cube = new THREE.Mesh(geometry, material);
-        scene.add(cube);
-
-
-        camera.position.z = 5;
-
-        var animate = function () {
-            requestAnimationFrame(animate);
-
-            cube.rotation.x += 0.01;
-            cube.rotation.y += 0.01;
-
-            renderer.render(scene, camera);
-        };
-
-        animate();
     </script>
 {% endblock %}

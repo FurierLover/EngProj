@@ -4,24 +4,28 @@ from threading import Thread
 
 
 class MeshThread(Thread):
+
+    def __init__(self, meshroom, input, output, socketio):
+        super(MeshThread, self).__init__()
+        self.meshroom = meshroom
+        self.input = input
+        self.output = output
+        self.socketio = socketio
+
     def run(self):
-        proc = Popen(['/home/grobocop/meshroom/Meshroom-2019.2.0/meshroom_photogrammetry',
+        proc = Popen([self.meshroom,
                       '--input',
-                      '/home/grobocop/dataset_monstree/full',
+                     self.input,
                       '--output',
-                      '/home/grobocop/output'],
+                      self.output],
                      stdout=PIPE)
-        while proc.returncode == None:
+        self.socketio.emit('my event', {"message": "Working..."})
+        while proc.returncode is None:
             out = proc.stdout.readline()
             if len(out) > 0:
-                print(out)
+                #print(out)
+
                 if b'[12/12] Publish' in out or b'Nodes to execute:  []\n' in out:
                     break
 
-        print('process finished')
-
-
-if __name__ == '__main__':
-    thread = MeshThread()
-    thread.start()
-    thread.join()
+        self.socketio.emit('my event', {"message": "Done!"})

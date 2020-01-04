@@ -1,6 +1,8 @@
-from app import app
-from flask import render_template, request, redirect, url_for
+import uuid
+from app import app, socketio
+from flask import render_template, request, redirect, url_for, session
 from werkzeug.utils import secure_filename
+from .mesh_thread import MeshThread
 
 import os
 
@@ -38,22 +40,17 @@ def upload_image():
     if request.method == "POST":
         if request.files:
 
-            image = request.files["image"]
-
-            if image.filename == "":
-                print("No filename")
+            images = request.files.getlist("image")
+            if len(images) == 0:
+                print("No files")
                 return redirect(request.url)
-
-            if allowed_image(image.filename):
-                filename = secure_filename(image.filename)
-                image.save(os.path.join(app.config["IMAGE_UPLOADS"], filename))
-                print("Image saved")
-                return image_uploaded(filename)
-
             else:
-                print("That file extension is not allowed")
-                return redirect(request.url)
-
+                directory_path = os.path.join(app.config.get('IMAGE_UPLOADS'), str(uuid.uuid4()))
+                os.mkdir(directory_path)
+                session['input_dir'] = directory_path
+                for image in images:
+                    image.save(os.path.join(directory_path, image.filename))
+                return redirect('/uploaded')
     return render_template("upload_image.html")
 
 
@@ -66,6 +63,18 @@ def upload_from_smartphone():
 
 
 @app.route("/uploaded")
-def image_uploaded(filename):
-    image_url = "../static/img/"+filename
-    return render_template("image_uploaded.html", image=image_url)
+def image_uploaded():
+    input_directory = session.get('input_dir', None)
+    output_directory = os.path.join(input_directory, 'output')
+    output_filename = os.path.join(output_directory, 'texturedMesh.obj')
+    os.mkdir(output_directory)
+    if input_directory is None:
+        return redirect('/upload_image')
+
+    socketio.emit('my event', {"message": "Working..."})
+
+    mesh_thread = MeshThread(app.config['PATH_TO_MESHROOM'], input_directory, output_directory, socketio)
+    mesh_thread.start()
+    mesh_thread.join()
+
+    return render_template("image_uploaded.html", object_url=output_filename)
