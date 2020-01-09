@@ -57,6 +57,7 @@ def upload_image():
 @app.route('/upload', methods=['POST'])
 def upload_from_smartphone():
     if request.files:
+        print(len(request.files))
         return '', 200
     else:
         return '', 404
