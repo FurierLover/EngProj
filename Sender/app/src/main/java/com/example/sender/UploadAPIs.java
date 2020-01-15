@@ -11,5 +11,5 @@ import retrofit2.http.Part;
 public interface UploadAPIs {
     @Multipart
     @POST("/upload")
-    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file1, @Part MultipartBody.Part file2, @Part("name") RequestBody requestBody);
+    Call<ResponseBody> uploadImage(@Part MultipartBody.Part file1, @Part MultipartBody.Part file2,@Part MultipartBody.Part file3, @Part("name") RequestBody requestBody);
 }

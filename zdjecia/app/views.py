@@ -57,7 +57,25 @@ def upload_image():
 @app.route('/upload', methods=['POST'])
 def upload_from_smartphone():
     if request.files:
-        print(len(request.files))
+        images = [request.files['upload1'],
+                  request.files['upload2'],
+                  request.files['upload3']]
+        directory_path = os.path.join(app.config.get('IMAGE_UPLOADS'), str(uuid.uuid4()))
+        os.mkdir(directory_path)
+        for image in images:
+            image.save(os.path.join(directory_path, image.filename))
+
+        output_directory = os.path.join(directory_path, 'output')
+        output_filename = os.path.join(output_directory, 'texturedMesh.obj')
+        os.mkdir(output_directory)
+        if directory_path is None:
+            return redirect('/upload_image')
+
+        socketio.emit('my event', {"message": "Working..."})
+
+        mesh_thread = MeshThread(app.config['PATH_TO_MESHROOM'], directory_path, output_directory, socketio)
+        mesh_thread.start()
+        mesh_thread.join()
         return '', 200
     else:
         return '', 404
