@@ -2,6 +2,8 @@ package com.example.sender;
 
 import android.content.Context;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -16,7 +18,10 @@ public class NetworkClient {
         if (retrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient
                     .Builder()
+                    .readTimeout(3, TimeUnit.MINUTES)
+                    .connectTimeout(3, TimeUnit.MINUTES)
                     .build();
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(okHttpClient)

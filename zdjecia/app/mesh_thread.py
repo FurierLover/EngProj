@@ -11,6 +11,7 @@ class MeshThread(Thread):
         self.input = input
         self.output = output
         self.socketio = socketio
+        self.success = False
 
     def run(self):
         proc = Popen([self.meshroom,
@@ -25,7 +26,12 @@ class MeshThread(Thread):
             if len(out) > 0:
                 #print(out)
 
-                if b'[12/12] Publish' in out or b'Nodes to execute:  []\n' in out:
+                if b'[12/12] Publish' in out or \
+                        b'Nodes to execute:  []\n' in out:
+                    self.success = True
+                    break
+                elif b'Aborted' in out:
+                    self.success = False
                     break
 
         self.socketio.emit('my event', {"message": "Done!"})

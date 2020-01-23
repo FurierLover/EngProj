@@ -1,8 +1,10 @@
 import uuid
 from app import app, socketio
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, send_file
 from werkzeug.utils import secure_filename
 from .mesh_thread import MeshThread
+import os
+import zipfile
 
 import os
 
@@ -59,7 +61,10 @@ def upload_from_smartphone():
     if request.files:
         images = [request.files['upload1'],
                   request.files['upload2'],
-                  request.files['upload3']]
+                  request.files['upload3'],
+                  request.files['upload4'],
+                  request.files['upload5'],
+                  ]
         directory_path = os.path.join(app.config.get('IMAGE_UPLOADS'), str(uuid.uuid4()))
         os.mkdir(directory_path)
         for image in images:
@@ -76,9 +81,19 @@ def upload_from_smartphone():
         mesh_thread = MeshThread(app.config['PATH_TO_MESHROOM'], directory_path, output_directory, socketio)
         mesh_thread.start()
         mesh_thread.join()
-        return '', 200
+        if mesh_thread.success:
+            zipfile_name = os.path.join(directory_path, 'output.zip')
+            zipf = zipfile.ZipFile(zipfile_name, 'w', zipfile.ZIP_DEFLATED)
+            for root, dirs, files in os.walk(output_directory):
+                for file in files:
+                    zipf.write(os.path.join(root, file))
+            zipf.close()
+            return send_file(zipfile_name, mimetype='application/zip')
+        else:
+            return 'Error while processing images', 404
+
     else:
-        return '', 404
+        return 'Error! no files were sent!', 404
 
 
 @app.route("/uploaded")
@@ -95,5 +110,16 @@ def image_uploaded():
     mesh_thread = MeshThread(app.config['PATH_TO_MESHROOM'], input_directory, output_directory, socketio)
     mesh_thread.start()
     mesh_thread.join()
+    if mesh_thread.success:
+        zipfile_name = os.path.join(input_directory, 'output.zip')
+        zipf = zipfile.ZipFile(zipfile_name, 'w', zipfile.ZIP_DEFLATED)
+        for root, dirs, files in os.walk(output_directory):
+            for file in files:
+                zipf.write(os.path.join(root, file))
+        zipf.close()
+        return send_file(zipfile_name, mimetype='application/zip')
+    else:
+        return 'Error while processing images', 404
+
 
     return render_template("image_uploaded.html", object_url=output_filename)
