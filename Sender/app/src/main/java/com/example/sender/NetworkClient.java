@@ -18,8 +18,8 @@ public class NetworkClient {
         if (retrofit == null) {
             OkHttpClient okHttpClient = new OkHttpClient
                     .Builder()
-                    .readTimeout(3, TimeUnit.MINUTES)
-                    .connectTimeout(3, TimeUnit.MINUTES)
+                    .readTimeout(6, TimeUnit.MINUTES)
+                    .connectTimeout(6, TimeUnit.MINUTES)
                     .build();
 
             retrofit = new Retrofit.Builder()

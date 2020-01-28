@@ -14,7 +14,7 @@ app.config["MAX_IMAGE_FILESIZE"] = 0.5 * 1024 * 1024
 
 
 def allowed_image(filename):
-    if not "." in filename:
+    if "." not in filename:
         return False
 
     ext = filename.rsplit(".", 1)[1]
@@ -62,8 +62,8 @@ def upload_from_smartphone():
         images = [request.files['upload1'],
                   request.files['upload2'],
                   request.files['upload3'],
-                  request.files['upload4'],
-                  request.files['upload5'],
+                #  request.files['upload4'],
+                #  request.files['upload5'],
                   ]
         directory_path = os.path.join(app.config.get('IMAGE_UPLOADS'), str(uuid.uuid4()))
         os.mkdir(directory_path)
@@ -88,7 +88,7 @@ def upload_from_smartphone():
                 for file in files:
                     zipf.write(os.path.join(root, file))
             zipf.close()
-            return send_file(zipfile_name, mimetype='application/zip')
+            return zipfile_name
         else:
             return 'Error while processing images', 404
 
@@ -120,6 +120,5 @@ def image_uploaded():
         return send_file(zipfile_name, mimetype='application/zip')
     else:
         return 'Error while processing images', 404
-
 
     return render_template("image_uploaded.html", object_url=output_filename)

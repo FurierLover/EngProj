@@ -14,7 +14,5 @@ public interface UploadAPIs {
     Call<ResponseBody> uploadImage(@Part MultipartBody.Part file1,
                                    @Part MultipartBody.Part file2,
                                    @Part MultipartBody.Part file3,
-                                   @Part MultipartBody.Part file4,
-                                   @Part MultipartBody.Part file5,
                                    @Part("name") RequestBody requestBody);
 }
